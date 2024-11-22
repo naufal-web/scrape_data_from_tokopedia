@@ -4,7 +4,7 @@ import csv
 contents = []
 extensive_contents = []
 
-scraper = ScrapeDataFromTokopedia("brankas", 2, 18)
+scraper = ScrapeDataFromTokopedia("brankas terbaik", 2, 18)
 scraper.search()
 
 for element in scraper.temporary_elements:
@@ -45,7 +45,6 @@ try:
         csv_writer.writerow(["Nama Produk", "Harga Produk", "Jumlah Barang Produk Yang Terjual"])
         csv_writer.writerows(contents)
 except FileExistsError:
-    # no_duplicate_contents = list(set(contents))
 
     sett = set()
 
