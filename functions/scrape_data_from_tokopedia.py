@@ -8,7 +8,7 @@ from bs4.__init__ import BeautifulSoup
 
 class ScrapeDataFromTokopedia:
 
-    def __init__(self, query):
+    def __init__(self, query, page_start: int, page_end: int):
         self.scripts = None
         self.query = query
         self.soup = None
@@ -16,8 +16,8 @@ class ScrapeDataFromTokopedia:
         self.current_element = None
         self.temporary_elements = []
         self.maximum_pages = 100
-        self.page_start = 0
-        self.page_end = self.maximum_pages
+        self.page_start = page_start
+        self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
 
     def print_result(self):
