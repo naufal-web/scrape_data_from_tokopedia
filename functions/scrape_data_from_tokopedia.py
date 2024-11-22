@@ -34,8 +34,12 @@ class ScrapeDataFromTokopedia:
         self.current_element = self.soup.find(attrs={"data-testid": "divSRPContentProducts"})
         self.soup = self.current_element
 
-        self.current_elements = self.soup.find_all("div", class_="css-jza1fo")
-        self.soup = self.current_elements
+        try:
+            self.current_elements = self.soup.find_all("div", class_="css-jza1fo")
+            self.soup = self.current_elements
+        except AttributeError:
+            pass
+
         for element in self.soup:
             sub_elements = element.find_all("div", class_="css-5wh65g")
             # print(sub_elements)
