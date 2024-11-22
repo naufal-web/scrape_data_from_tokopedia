@@ -42,28 +42,31 @@ class ScrapeDataFromTokopedia:
         except AttributeError:
             pass
 
-        for element in self.soup:
-            sub_elements = element.find_all("div", class_="css-5wh65g")
-            # print(sub_elements)
-            for child_element in sub_elements:
-                child_element = child_element.find("a", class_="oQ94Awb6LlTiGByQZo8Lyw== IM26HEnTb-krJayD-R0OHw==")
-                # print(child_element)
-                if child_element is not None:
-                    class_name_for_normal_price = "_67d6E1xDKIzw+i2D2L0tjw== "
-                    class_name_for_current_price = "_67d6E1xDKIzw+i2D2L0tjw== t4jWW3NandT5hvCFAiotYg=="
-                    # class_name_for_previous_price = "q6wH9+Ht7LxnxrEgD22BCQ=="
-                    child_element = child_element.find("div", class_="bYD8FcVCFyOBiVyITwDj1Q==")
-                    product_name = child_element.find("span", class_="_0T8-iGxMpV6NEsYEhwkqEg==")
-                    normal_price = child_element.find("div", class_=class_name_for_normal_price)
-                    current_price = child_element.find("div", class_=class_name_for_current_price)
-                    sold_number = child_element.find("span", class_="se8WAnkjbVXZNA8mT+Veuw==")
-                    # previous_price = child_element.find("span", class_=class_name_for_previous_price)
-                    if normal_price is not None and current_price is None and sold_number is not None:
-                        self.temporary_elements.append([product_name.text, normal_price.text, sold_number.text])
-                        # print(product_name.text, normal_price.text)
-                    elif current_price is not None and normal_price is None and sold_number is not None:
-                        self.temporary_elements.append([product_name.text, current_price.text, sold_number.text])
-                        # print(product_name.text, current_price.text)
+        if self.soup is not None:
+            for element in self.soup:
+                sub_elements = element.find_all("div", class_="css-5wh65g")
+                # print(sub_elements)
+                for child_element in sub_elements:
+                    child_element = child_element.find("a", class_="oQ94Awb6LlTiGByQZo8Lyw== IM26HEnTb-krJayD-R0OHw==")
+                    # print(child_element)
+                    if child_element is not None:
+                        class_name_for_normal_price = "_67d6E1xDKIzw+i2D2L0tjw== "
+                        class_name_for_current_price = "_67d6E1xDKIzw+i2D2L0tjw== t4jWW3NandT5hvCFAiotYg=="
+                        # class_name_for_previous_price = "q6wH9+Ht7LxnxrEgD22BCQ=="
+                        child_element = child_element.find("div", class_="bYD8FcVCFyOBiVyITwDj1Q==")
+                        product_name = child_element.find("span", class_="_0T8-iGxMpV6NEsYEhwkqEg==")
+                        normal_price = child_element.find("div", class_=class_name_for_normal_price)
+                        current_price = child_element.find("div", class_=class_name_for_current_price)
+                        sold_number = child_element.find("span", class_="se8WAnkjbVXZNA8mT+Veuw==")
+                        # previous_price = child_element.find("span", class_=class_name_for_previous_price)
+                        if normal_price is not None and current_price is None and sold_number is not None:
+                            self.temporary_elements.append([product_name.text, normal_price.text, sold_number.text])
+                            # print(product_name.text, normal_price.text)
+                        elif current_price is not None and normal_price is None and sold_number is not None:
+                            self.temporary_elements.append([product_name.text, current_price.text, sold_number.text])
+                            # print(product_name.text, current_price.text)
+        else:
+            self.temporary_elements.append([])
 
     def search(self):
         self.query = self.query.replace(" ", "+")
