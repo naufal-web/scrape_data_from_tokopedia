@@ -1,4 +1,6 @@
 import time
+
+import urllib3.exceptions
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.common.exceptions import *
 from bs4.__init__ import BeautifulSoup
@@ -76,6 +78,8 @@ class ScrapeDataFromTokopedia:
                 self.scripts = driver.page_source
                 driver.close()
             except NoSuchWindowException:
+                pass
+            except urllib3.exceptions.ReadTimeoutError:
                 pass
             else:
                 self.soup = BeautifulSoup(self.scripts, "html.parser")
