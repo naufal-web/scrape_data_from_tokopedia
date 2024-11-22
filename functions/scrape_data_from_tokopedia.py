@@ -76,7 +76,7 @@ class ScrapeDataFromTokopedia:
             try:
                 driver = WebDriver()
                 driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
-                for k in range(0, 3000):
+                for k in range(150):
                     driver.execute_script(" window.scrollBy({}, {});".format(k, k+1))
                     time.sleep(0.05)
                 time.sleep(0.22)
@@ -85,6 +85,10 @@ class ScrapeDataFromTokopedia:
             except NoSuchWindowException:
                 pass
             except urllib3.exceptions.ReadTimeoutError:
+                pass
+            except InvalidSessionIdException:
+                pass
+            except WebDriverException:
                 pass
             else:
                 self.soup = BeautifulSoup(self.scripts, "html.parser")
