@@ -16,9 +16,9 @@ class ScrapeDataFromTokopedia:
         self.current_element = None
         self.temporary_elements = []
         self.maximum_pages = 1000
-        self.page_start = 1
-        self.page_end = self.page_start + self.maximum_pages
-        self.page_range = range(self.page_start - 1, self.page_end)
+        self.page_start = 0
+        self.page_end = self.maximum_pages
+        self.page_range = range(self.page_start, self.page_end)
 
     def print_result(self):
         self.current_element = self.soup.find("div", id="zeus-root")
