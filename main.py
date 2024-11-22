@@ -4,7 +4,7 @@ import csv
 contents = []
 extensive_contents = []
 
-scraper = ScrapeDataFromTokopedia("brankas terbaik", 2, 18)
+scraper = ScrapeDataFromTokopedia("brankas terbaru", 2, 18)
 scraper.search()
 
 for element in scraper.temporary_elements:
