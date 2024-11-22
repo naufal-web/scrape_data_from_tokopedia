@@ -45,10 +45,17 @@ try:
         csv_writer.writerow(["Nama Produk", "Harga Produk", "Jumlah Barang Produk Yang Terjual"])
         csv_writer.writerows(contents)
 except FileExistsError:
-    no_duplicate_contents = set(contents)
+    # no_duplicate_contents = list(set(contents))
+
+    sett = set()
+
     for content in contents:
-        if content not in no_duplicate_contents:
-            extensive_contents.append(content)
+        sett.add(tuple(content))
+
+    for content in contents:
+        content = tuple(content)
+        if content not in sett:
+            extensive_contents.append(list(content))
 
     with open(f"resources/{scraper.query.replace("+", "_")}.csv", mode="a", newline="", encoding="UTF-8") as csv_file:
         csv_writer = csv.writer(csv_file)
