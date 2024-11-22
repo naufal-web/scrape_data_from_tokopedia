@@ -74,10 +74,9 @@ class ScrapeDataFromTokopedia:
             try:
                 driver = WebDriver()
                 driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
-                for k in range(0, 3000, 1000):
-                    driver.execute_script(" window.scrollBy({}, {});".format(k, k+999))
-                    time.sleep(3.)
-                time.sleep(2.)
+                for k in range(0, 3000, 600):
+                    driver.execute_script(" window.scrollBy({}, {});".format(k, k+600))
+                    time.sleep(12.)
                 self.scripts = driver.page_source
                 driver.close()
             except NoSuchWindowException:
