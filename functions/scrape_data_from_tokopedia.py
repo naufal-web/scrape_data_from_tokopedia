@@ -65,7 +65,7 @@ class ScrapeDataFromTokopedia:
 
     def search(self):
         self.query = self.query.replace(" ", "+")
-        for m in range(self.maximum_pages):
+        for m in self.page_range:
             try:
                 driver = WebDriver()
                 driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
