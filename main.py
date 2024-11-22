@@ -5,7 +5,8 @@ contents = []
 extensive_contents = []
 
 scraper = ScrapeDataFromTokopedia("brankas")
-scraper.page_range = range(2, 18)
+scraper.page_start = 2
+scraper.page_end = 18
 scraper.search()
 
 for element in scraper.temporary_elements:
