@@ -40,9 +40,7 @@ class ScrapeDataFromTokopedia:
             self.current_elements = self.soup.find_all("div", class_="css-jza1fo")
             self.soup = self.current_elements
         except AttributeError:
-            self.current_element = self.soup.find("div", class_="IOLazyLoading")
-            self.current_elements = self.current_element.find_all("div", class_="css-jza1fo")
-            self.soup.extend(self.current_elements)
+            pass
         else:
             pass
 
