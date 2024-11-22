@@ -46,15 +46,13 @@ try:
         csv_writer.writerows(contents)
 except FileExistsError:
 
-    sett = set()
-
-    for content in contents:
-        sett.add(tuple(content))
+    with open(f"resources/{scraper.query.replace("+", "_")}.csv", mode="r", newline="", encoding="UTF-8") as csv_file:
+        existed_content = list(csv.reader(csv_file))[1:]
 
     for content in contents:
         content = tuple(content)
-        if content not in sett:
-            extensive_contents.append(list(content))
+        if content not in existed_content:
+            extensive_contents.append(content)
 
     with open(f"resources/{scraper.query.replace("+", "_")}.csv", mode="a", newline="", encoding="UTF-8") as csv_file:
         csv_writer = csv.writer(csv_file)
