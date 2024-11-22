@@ -1,5 +1,6 @@
 import time
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.common.exceptions import *
 from bs4.__init__ import BeautifulSoup
 
 
@@ -61,13 +62,17 @@ class ScrapeDataFromTokopedia:
     def search(self):
         self.query = self.query.replace(" ", "+")
         for m in range(self.maximum_pages):
-            driver = WebDriver()
-            driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
-            for k in range(0, 3000, 1000):
-                driver.execute_script(" window.scrollBy({}, {});".format(k, k+999))
-                time.sleep(3.)
-            time.sleep(2.)
-            self.scripts = driver.page_source
-            driver.close()
-            self.soup = BeautifulSoup(self.scripts, "html.parser")
-            self.print_result()
+            try:
+                driver = WebDriver()
+                driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
+                for k in range(0, 3000, 1000):
+                    driver.execute_script(" window.scrollBy({}, {});".format(k, k+999))
+                    time.sleep(3.)
+                time.sleep(2.)
+                self.scripts = driver.page_source
+                driver.close()
+            except NoSuchWindowException:
+                pass
+            else:
+                self.soup = BeautifulSoup(self.scripts, "html.parser")
+                self.print_result()
