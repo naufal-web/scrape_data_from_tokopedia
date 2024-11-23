@@ -4,16 +4,22 @@ from functions.scrape_data_from_tokopedia import ScrapeDataFromTokopedia
 
 root_path = os.getcwd()
 resources_dir = "resources"
-filename = "brankas_terlaris"
+filename = "brankas"
+filenames = [filename + name for name in ["_terbaik", "_terbaru", "_terlaris", "_termurah"]]
+
 csv_extensions = ".csv"
-query = filename.replace("_", "+")
 
-saving_filepath = os.path.join(root_path, resources_dir, filename + csv_extensions)
+for file_state in filenames:
+    query = file_state.replace("_", "+")
 
-tokopedia = ScrapeDataFromTokopedia(query, 0, 19)
-for content in tokopedia.temporary_elements:
-    print(content)
+    saving_filepath = os.path.join(root_path, resources_dir, file_state + csv_extensions)
 
-with open(saving_filepath, mode="w", newline="", encoding="UTF-8") as saved_filepath:
-    file_writer = csv.writer(saved_filepath)
-    file_writer.writerows(tokopedia.temporary_elements)
+    print(saving_filepath)
+
+    tokopedia = ScrapeDataFromTokopedia(query, 0, 28)
+    for content in tokopedia.temporary_elements:
+        print(content)
+
+    with open(saving_filepath, mode="w", newline="", encoding="UTF-8") as saved_filepath:
+        file_writer = csv.writer(saved_filepath)
+        file_writer.writerows(tokopedia.temporary_elements)
