@@ -1,10 +1,10 @@
 import csv
 
 budget = 1400000
-out_stock = 300
+out_stock = 21
 recommendations = set()
 
-with open(r"C:\Users\62853\PycharmProjects\cashier_app\resources\brankas.csv") as csv_file:
+with open(r"C:\Users\62853\PycharmProjects\cashier_app\resources\brankas_terbaru.csv") as csv_file:
     csv_reader = csv.reader(csv_file)
     csv_contents = list(csv_reader)[1:]
 
