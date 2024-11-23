@@ -19,6 +19,8 @@ class ScrapeDataFromTokopedia:
         self.page_start = page_start
         self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
+        self.search()
+        self.print_result()
 
     def print_result(self):
         self.current_element = self.soup.find("div", id="zeus-root")
@@ -92,4 +94,3 @@ class ScrapeDataFromTokopedia:
                 pass
             else:
                 self.soup = BeautifulSoup(self.scripts, "html.parser")
-                self.print_result()
