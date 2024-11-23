@@ -1,6 +1,5 @@
 import time
-
-import urllib3.exceptions
+from urllib3.exceptions import *
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.common.exceptions import *
 from bs4.__init__ import BeautifulSoup
@@ -14,26 +13,23 @@ class ScrapeDataFromTokopedia:
         self.soup = None
         self.current_elements = None
         self.current_element = None
-        self.temporary_elements = []
+        self.temporary_elements = [
+            ["Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra"]]
         self.maximum_pages = 100
         self.page_start = page_start
         self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
         self.search()
-        self.print_result()
 
     def print_result(self):
         self.current_element = self.soup.find("div", id="zeus-root")
         self.soup = self.current_element
 
-        self.current_element = self.soup.find("div", class_="css-8atqhb")
-        self.soup = self.current_element
+        classes = ["css-8atqhb", "css-jau1bt", "css-rjanld"]
 
-        self.current_element = self.soup.find("div", class_="css-jau1bt")
-        self.soup = self.current_element
-
-        self.current_element = self.soup.find("div", class_="css-rjanld")
-        self.soup = self.current_element
+        for class_ in classes:
+            self.current_element = self.soup.find("div", class_=class_)
+            self.soup = self.current_element
 
         self.current_element = self.soup.find(attrs={"data-testid": "divSRPContentProducts"})
         self.soup = self.current_element
@@ -57,40 +53,67 @@ class ScrapeDataFromTokopedia:
                         class_name_for_normal_price = "_67d6E1xDKIzw+i2D2L0tjw== "
                         class_name_for_current_price = "_67d6E1xDKIzw+i2D2L0tjw== t4jWW3NandT5hvCFAiotYg=="
                         # class_name_for_previous_price = "q6wH9+Ht7LxnxrEgD22BCQ=="
+                        product_link = child_element.get("href")
                         child_element = child_element.find("div", class_="bYD8FcVCFyOBiVyITwDj1Q==")
+                        product_image_link = child_element.find("img")
+                        product_image_link = product_image_link.get("src")
                         product_name = child_element.find("span", class_="_0T8-iGxMpV6NEsYEhwkqEg==")
                         normal_price = child_element.find("div", class_=class_name_for_normal_price)
                         current_price = child_element.find("div", class_=class_name_for_current_price)
                         sold_number = child_element.find("span", class_="se8WAnkjbVXZNA8mT+Veuw==")
                         # previous_price = child_element.find("span", class_=class_name_for_previous_price)
                         if normal_price is not None and current_price is None and sold_number is not None:
-                            self.temporary_elements.append([product_name.text, normal_price.text, sold_number.text])
-                            # print(product_name.text, normal_price.text)
+                            normal_price = int(normal_price.text.replace("Rp", "").replace(".", ""))
+                            if sold_number.text.find("+ terjual") > 0:
+                                sold_number = int(sold_number.text.replace("+ terjual", ""))
+                            else:
+                                sold_number = int(sold_number.text.replace(" terjual", ""))
+                            self.temporary_elements.append([product_name.text, normal_price, sold_number, product_link,
+                                                            product_image_link])
                         elif current_price is not None and normal_price is None and sold_number is not None:
-                            self.temporary_elements.append([product_name.text, current_price.text, sold_number.text])
-                            # print(product_name.text, current_price.text)
+                            current_price = int(current_price.text.replace("Rp", "").replace(".", ""))
+                            if sold_number.text.find("+ terjual") > 0:
+                                sold_number = int(sold_number.text.replace("+ terjual", ""))
+                            else:
+                                sold_number = int(sold_number.text.replace(" terjual", ""))
+                            self.temporary_elements.append([product_name.text, current_price, sold_number, product_link,
+                                                            product_image_link])
         else:
             self.temporary_elements.append([])
 
     def search(self):
         self.query = self.query.replace(" ", "+")
         for m in self.page_range:
+            driver = WebDriver()
             try:
-                driver = WebDriver()
                 driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
-                for k in range(150):
-                    driver.execute_script(" window.scrollBy({}, {});".format(k, k+1))
-                    time.sleep(0.05)
-                time.sleep(0.22)
-                self.scripts = driver.page_source
-                driver.close()
             except NoSuchWindowException:
-                pass
-            except urllib3.exceptions.ReadTimeoutError:
-                pass
+                continue
+            except ReadTimeoutError:
+                break
+
+            try:
+                for k in range(0, 80):
+                    driver.execute_script("window.scrollBy({}, {});".format(k, k+1))
+                    time.sleep(0.05)
+
+                self.scripts = driver.page_source
+            except NoSuchWindowException:
+                driver.close()
+                continue
+            except ReadTimeoutError:
+                driver.close()
+                continue
             except InvalidSessionIdException:
-                pass
+                driver.close()
+                continue
             except WebDriverException:
-                pass
+                driver.close()
+                continue
             else:
+                driver.close()
                 self.soup = BeautifulSoup(self.scripts, "html.parser")
+                self.print_result()
+
+            print("Halaman {}/{}".format(str(m+1).zfill(2), self.page_end))
+            print("Data yang diterima secara kumulatif : {} data".format(len(self.temporary_elements[1:])))
