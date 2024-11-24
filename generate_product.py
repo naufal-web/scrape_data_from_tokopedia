@@ -1,6 +1,7 @@
 import os
 import csv
 from functions.scrape_data_from_tokopedia import ScrapeDataFromTokopedia
+from urllib.request import urlretrieve
 
 
 class UpdateResources(ScrapeDataFromTokopedia):
@@ -35,6 +36,12 @@ class UpdateResources(ScrapeDataFromTokopedia):
             writer = csv.writer(new_filepath)
             writer.writerows(self.temporary_elements)
 
+    def retrieve_new_images(self, file):
+        for index, content in enumerate(self.temporary_elements[1:]):
+            new_images_path = "images\\{}_{}.png".format(file, str(index + 1).zfill(2))
+            stored_path = os.path.join(self.root_path, new_images_path)
+            urlretrieve(content[-1].replace(".webp?ect=4g", ""), stored_path)
+
     def __init__(self, new_or_existed_query: str, start_index, end_index):
         categories = ["_terbaik", "_terbaru", "_terlaris", "_termurah"]
         self.filenames = [new_or_existed_query + name for name in categories]
@@ -45,6 +52,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 self.existing_content = self.retrieve_csv_file()
                 self.filtrated_content = self.get_new_data()
                 self.append_to_existing_data()
+                self.retrieve_new_images(file)
 
         else:
             self.filename = new_or_existed_query
@@ -54,6 +62,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
 
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
                 self.creating_new_data()
+                self.retrieve_new_images(file)
 
 
 update_resources = UpdateResources(new_or_existed_query="mesin_bubut", start_index=0, end_index=13)
