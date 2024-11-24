@@ -40,7 +40,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
             writer.writerows(self.temporary_elements)
 
     def retrieve_new_images(self, file):
-        for index, content in enumerate(self.temporary_elements[1:]):
+        for index, content in enumerate(list(self.temporary_elements)[1:]):
             new_images_path = "images\\{}_{}.png".format(file, str(index + 1).zfill(2))
             stored_path = os.path.join(self.root_path, new_images_path)
             urlretrieve(content[-1].replace(".webp?ect=4g", ""), stored_path)

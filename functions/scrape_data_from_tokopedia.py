@@ -97,13 +97,13 @@ class ScrapeDataFromTokopedia:
                 continue
             except ReadTimeoutError:
                 break
-            driver.minimize_window()
+
             self.scripts = []
             try:
-                for k in range(150):
+                for k in range(110):
                     driver.execute_script("window.scrollBy({}, {});".format(k, k + 1))
                     time.sleep(0.05)
-                    if k % 40 == 0:
+                    if k % 30 == 0:
                         self.scripts.append(driver.page_source)
                 if datetime.now().second < 60:
                     time.sleep(60.0 - float(datetime.now().second))
@@ -131,4 +131,4 @@ class ScrapeDataFromTokopedia:
                     continue
 
             print("Halaman {}/{}".format(str(m + 1).zfill(2), self.page_end))
-            print("Data yang diterima secara kumulatif : {} data".format(len(self.temporary_elements[1:])))
+            print("Data yang diterima secara kumulatif : {} data".format(len(list(self.temporary_elements)[1:])))
