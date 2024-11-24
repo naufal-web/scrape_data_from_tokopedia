@@ -174,6 +174,7 @@ if __name__ == "__main__":
     deleting_data_from_table_by_specific_product_identity(get_product_identity_for_deleting_data())
     images_content = []
     for data_index, data_row in enumerate(select_data_from_database("procurement")):
+        print(data_row)
         image_path = "images\\image_{}.png".format(str(data_row[0]).zfill(3))
         image_link = str(data_row[-1]).removesuffix("?ect=4g")
         product_identity = data_row[0]
