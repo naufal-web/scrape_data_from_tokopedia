@@ -42,4 +42,4 @@ def deduplicate_images_from_directory(images_dir="images"):
     return images_set
 
 
-print(len(deduplicate_images_from_directory()))
+# print(len(deduplicate_images_from_directory()))
