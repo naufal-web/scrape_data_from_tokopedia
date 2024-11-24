@@ -40,9 +40,10 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 writer = csv.writer(new_filepath)
                 writer.writerows(self.temporary_elements)
         except FileExistsError:
-            with open(self.savable_filepath, mode="w", newline="", encoding="UTF-8") as new_filepath:
-                writer = csv.writer(new_filepath)
-                writer.writerows(self.temporary_elements)
+            self.existing_content = self.retrieve_csv_file()
+            self.filtrated_content = self.get_new_data()
+            self.filtrated_content = list(set(self.filtrated_content))
+            self.append_to_existing_data()
 
     def retrieve_new_images(self, file):
         for index, content in enumerate(list(self.temporary_elements)[1:]):
