@@ -39,6 +39,11 @@ class UpdateResources(ScrapeDataFromTokopedia):
             writer = csv.writer(new_filepath)
             writer.writerows(self.temporary_elements)
 
+    def rewriting_existing_data(self):
+        with open(self.savable_filepath, mode="r", newline="", encoding="UTF-8") as new_filepath:
+            writer = csv.writer(new_filepath)
+            writer.writerows(self.temporary_elements)
+
     def retrieve_new_images(self, file):
         for index, content in enumerate(list(self.temporary_elements)[1:]):
             new_images_path = "images\\{}_{}.png".format(file, str(index + 1).zfill(2))
@@ -75,7 +80,10 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 super().__init__(query=file.replace("_", "+"), page_start=0, page_end=end_index)
 
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
-                self.creating_new_data()
+                try:
+                    self.creating_new_data()
+                except FileExistsError:
+                    self.rewriting_existing_data()
                 self.retrieve_new_images(file)
 
 
