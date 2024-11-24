@@ -16,7 +16,6 @@ class ScrapeDataFromTokopedia:
         self.soup = None
         self.current_elements = None
         self.current_element = None
-        self.temporary_elements = set()
         self.maximum_pages = 100
         self.page_start = page_start
         self.page_end = page_end
@@ -76,6 +75,11 @@ class ScrapeDataFromTokopedia:
                             current_price = current_price.text.replace("Rp", "").replace(".", "")
                             if sold_number.text.find("+ terjual") > 0:
                                 sold_number = sold_number.text.replace("+ terjual", "")
+                                if sold_number.endswith("rb"):
+                                    sold_number = sold_number.replace("rb", "000")
+
+                                if sold_number.endswith("jt"):
+                                    sold_number = sold_number.replace("jt", "000000")
                             else:
                                 sold_number = sold_number.text.replace(" terjual", "")
                             self.temporary_elements.append((product_name.text, current_price, sold_number, product_link,

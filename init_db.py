@@ -87,6 +87,17 @@ def insert_data(statement, entries=None):
         with sqlite3.connect("databases/procurement.db") as procurement_db:
             cursor = procurement_db.cursor()
             for entry in entries:
+                temp = []
+                for element in entry:
+                    if isinstance(element, str):
+                        if element.endswith("rb"):
+                            element = int(element.replace("rb", "000"))
+                            temp.append(element)
+                        else:
+                            temp.append(element)
+                    else:
+                        temp.append(element)
+                entry = tuple(temp)
                 try:
                     cursor.execute(statement, entry)
                 except sqlite3.IntegrityError:
@@ -137,6 +148,9 @@ def get_product_identity_for_deleting_data():
     product_id = []
     for index, row in enumerate(select_data_from_database("procurement")):
         if str(row[-1]).startswith("https://assets.tokopedia.net/") or str(row[-1]) == "Tautan Citra":
+            product_id.append(row[0])
+
+        if str(row[3]).endswith("rb"):
             product_id.append(row[0])
 
     return product_id
