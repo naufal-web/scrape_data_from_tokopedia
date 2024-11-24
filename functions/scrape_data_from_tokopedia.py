@@ -9,6 +9,8 @@ from datetime import datetime
 class ScrapeDataFromTokopedia:
 
     def __init__(self, query, page_start: int, page_end: int):
+        self.temporary_elements = [
+            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")]
         self.scripts = None
         self.query = query
         self.soup = None
@@ -19,8 +21,6 @@ class ScrapeDataFromTokopedia:
         self.page_start = page_start
         self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
-        self.temporary_elements = [
-            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")]
         self.search()
 
     def print_result(self):
