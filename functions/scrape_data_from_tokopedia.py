@@ -19,8 +19,8 @@ class ScrapeDataFromTokopedia:
         self.page_start = page_start
         self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
-        self.temporary_elements = {
-            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")}
+        self.temporary_elements = [
+            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")]
         self.search()
 
     def print_result(self):
@@ -70,15 +70,15 @@ class ScrapeDataFromTokopedia:
                                 sold_number = sold_number.text.replace("+ terjual", "")
                             else:
                                 sold_number = sold_number.text.replace(" terjual", "")
-                            self.temporary_elements.add((product_name.text, normal_price, sold_number, product_link,
-                                                         product_image_link))
+                            self.temporary_elements.append((product_name.text, normal_price, sold_number, product_link,
+                                                            product_image_link))
                         elif current_price is not None and normal_price is None and sold_number is not None:
                             current_price = current_price.text.replace("Rp", "").replace(".", "")
                             if sold_number.text.find("+ terjual") > 0:
                                 sold_number = sold_number.text.replace("+ terjual", "")
                             else:
                                 sold_number = sold_number.text.replace(" terjual", "")
-                            self.temporary_elements.add((product_name.text, current_price, sold_number, product_link,
+                            self.temporary_elements.append((product_name.text, current_price, sold_number, product_link,
                                                         product_image_link))
         else:
             pass
@@ -98,10 +98,10 @@ class ScrapeDataFromTokopedia:
 
             self.scripts = []
             try:
-                for k in range(110):
+                for k in range(80):
                     driver.execute_script("window.scrollBy({}, {});".format(k, k + 1))
                     time.sleep(0.05)
-                    if k % 30 == 0:
+                    if 30 <= k <= 50:
                         self.scripts.append(driver.page_source)
                 if datetime.now().second < 60:
                     time.sleep(60.0 - float(datetime.now().second))

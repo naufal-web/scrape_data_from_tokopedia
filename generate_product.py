@@ -70,7 +70,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 self.filtrated_content = self.get_new_data()
                 self.filtrated_content = list(set(self.filtrated_content))
                 self.append_to_existing_data()
-                self.retrieve_new_images(file)
+                # self.retrieve_new_images(file)
 
         else:
             self.filename = new_or_existed_query
@@ -81,9 +81,9 @@ class UpdateResources(ScrapeDataFromTokopedia):
 
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
                 self.creating_new_data()
-                self.retrieve_new_images(file)
+                # self.retrieve_new_images(file)
 
 
 if __name__ == "__main__":
-    for kw in ["brankas", "mesin_bubut"]:
-        UpdateResources(new_or_existed_query=kw, start_index=0, end_index=2)
+    for kw in ["brankas", "mesin_bubut", "kursi roda"]:
+        UpdateResources(new_or_existed_query=kw, start_index=2, end_index=21)
