@@ -130,5 +130,5 @@ class ScrapeDataFromTokopedia:
                     self.print_result()
                     continue
 
-            print("Halaman {}/{}".format(str(m + 1).zfill(2), self.page_end))
+            print("Halaman {}/{}".format(str(m + 1).zfill(3), str(self.page_end).zfill(3)))
             print("Data yang diterima secara kumulatif : {} data".format(len(list(self.temporary_elements)[1:])))

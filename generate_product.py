@@ -35,14 +35,14 @@ class UpdateResources(ScrapeDataFromTokopedia):
             writer.writerows(self.filtrated_content[1:])
 
     def creating_new_data(self):
-        with open(self.savable_filepath, mode="x", newline="", encoding="UTF-8") as new_filepath:
-            writer = csv.writer(new_filepath)
-            writer.writerows(self.temporary_elements)
-
-    def rewriting_existing_data(self):
-        with open(self.savable_filepath, mode="r", newline="", encoding="UTF-8") as new_filepath:
-            writer = csv.writer(new_filepath)
-            writer.writerows(self.temporary_elements)
+        try:
+            with open(self.savable_filepath, mode="x", newline="", encoding="UTF-8") as new_filepath:
+                writer = csv.writer(new_filepath)
+                writer.writerows(self.temporary_elements)
+        except FileExistsError:
+            with open(self.savable_filepath, mode="w", newline="", encoding="UTF-8") as new_filepath:
+                writer = csv.writer(new_filepath)
+                writer.writerows(self.temporary_elements)
 
     def retrieve_new_images(self, file):
         for index, content in enumerate(list(self.temporary_elements)[1:]):
@@ -80,12 +80,10 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 super().__init__(query=file.replace("_", "+"), page_start=0, page_end=end_index)
 
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
-                try:
-                    self.creating_new_data()
-                except FileExistsError:
-                    self.rewriting_existing_data()
+                self.creating_new_data()
                 self.retrieve_new_images(file)
 
 
-for kw in ["brankas", "mesin_bubut"]:
-    UpdateResources(new_or_existed_query=kw, start_index=0, end_index=13)
+if __name__ == "__main__":
+    for kw in ["brankas", "mesin_bubut"]:
+        UpdateResources(new_or_existed_query=kw, start_index=0, end_index=2)
