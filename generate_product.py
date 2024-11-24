@@ -86,4 +86,4 @@ class UpdateResources(ScrapeDataFromTokopedia):
 
 if __name__ == "__main__":
     for kw in ["brankas", "mesin_bubut", "kursi roda"]:
-        UpdateResources(new_or_existed_query=kw, start_index=2, end_index=21)
+        update_resources = UpdateResources(new_or_existed_query=kw, start_index=22, end_index=36)
