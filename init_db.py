@@ -183,4 +183,4 @@ if __name__ == "__main__":
     deleting_data_from_table_by_specific_image_identity(get_image_id_for_deleting_data())
 
     for row in select_data_from_database("images"):
-        urllib.request.urlretrieve(row[1].replace(".png", "").replace(".jpeg", ""), row[2])
+        urllib.request.urlretrieve(row[1].replace(".webp", ""), row[2])
