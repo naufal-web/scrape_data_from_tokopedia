@@ -93,7 +93,7 @@ class ScrapeDataFromTokopedia:
                 break
 
             try:
-                for k in range(110):
+                for k in range(80):
                     driver.execute_script("window.scrollBy({}, {});".format(k, k+1))
                     time.sleep(0.05)
                 time.sleep(0.45)
