@@ -3,6 +3,7 @@ from urllib3.exceptions import *
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.common.exceptions import *
 from bs4.__init__ import BeautifulSoup
+from datetime import datetime
 
 
 class ScrapeDataFromTokopedia:
@@ -79,7 +80,9 @@ class ScrapeDataFromTokopedia:
                             self.temporary_elements.append([product_name.text, current_price, sold_number, product_link,
                                                             product_image_link])
         else:
-            self.temporary_elements.append([])
+            pass
+
+        self.temporary_elements = list(set(self.temporary_elements))
 
     def search(self):
         self.query = self.query.replace(" ", "+")
@@ -91,13 +94,20 @@ class ScrapeDataFromTokopedia:
                 continue
             except ReadTimeoutError:
                 break
-
+            driver.minimize_window()
+            self.scripts = []
             try:
-                for k in range(80):
+                for k in range(150):
                     driver.execute_script("window.scrollBy({}, {});".format(k, k+1))
                     time.sleep(0.05)
-                time.sleep(0.45)
-                self.scripts = driver.page_source
+                    if k % 40 == 0:
+                        self.scripts.append(driver.page_source)
+                if datetime.now().second < 60:
+                    time.sleep(60.0 - float(datetime.now().second))
+                    self.scripts.append(driver.page_source)
+                else:
+                    time.sleep(0.0)
+                    self.scripts.append(driver.page_source)
             except NoSuchWindowException:
                 driver.close()
                 continue
@@ -112,8 +122,10 @@ class ScrapeDataFromTokopedia:
                 continue
             else:
                 driver.close()
-                self.soup = BeautifulSoup(self.scripts, "html.parser")
-                self.print_result()
+                for script in self.scripts:
+                    self.soup = BeautifulSoup(script, "html.parser")
+                    self.print_result()
+                    continue
 
             print("Halaman {}/{}".format(str(m+1).zfill(2), self.page_end))
             print("Data yang diterima secara kumulatif : {} data".format(len(self.temporary_elements[1:])))
