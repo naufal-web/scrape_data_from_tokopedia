@@ -57,6 +57,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
         if new_or_existed_query in self.existed_keywords:
             # print(new_or_existed_query)
             for file in self.filenames:
+                print(file.replace("_", " ").title())
                 super().__init__(query=file.replace("_", "+"), page_start=start_index, page_end=end_index)
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
                 self.existing_content = self.retrieve_csv_file()
@@ -69,6 +70,7 @@ class UpdateResources(ScrapeDataFromTokopedia):
             self.filename = new_or_existed_query
             self.filenames.insert(0, self.filename)
             for file in self.filenames:
+                print(file.replace("_", " ").title())
                 super().__init__(query=file.replace("_", "+"), page_start=0, page_end=end_index)
 
                 self.savable_filepath = os.path.join(self.root_path, self.resources_dir, file + self.csv_extensions)
