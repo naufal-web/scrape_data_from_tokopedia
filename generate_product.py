@@ -43,7 +43,8 @@ class UpdateResources(ScrapeDataFromTokopedia):
         for index, content in enumerate(list(self.temporary_elements)[1:]):
             new_images_path = "images\\{}_{}.png".format(file, str(index + 1).zfill(2))
             stored_path = os.path.join(self.root_path, new_images_path)
-            urlretrieve(content[-1].replace(".webp?ect=4g", ""), stored_path)
+            if content[-1].startswith("https://images.tokopedia.net/img/cache/200-square/"):
+                urlretrieve(content[-1].replace(".webp?ect=4g", ""), stored_path)
 
     def __init__(self, new_or_existed_query: str, start_index, end_index):
         self.existed_keywords = [existed_keyword.removesuffix(category)
