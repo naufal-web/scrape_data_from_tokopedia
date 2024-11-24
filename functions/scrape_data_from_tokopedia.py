@@ -15,14 +15,12 @@ class ScrapeDataFromTokopedia:
         self.current_elements = None
         self.current_element = None
         self.temporary_elements = set()
-        # self.temporary_elements = [
-        #     ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")]
-        self.temporary_elements.add(
-            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra"))
         self.maximum_pages = 100
         self.page_start = page_start
         self.page_end = page_end
         self.page_range = range(self.page_start, self.page_end)
+        self.temporary_elements = {
+            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")}
         self.search()
 
     def print_result(self):
