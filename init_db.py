@@ -1,10 +1,9 @@
 import csv
 import os
 import sqlite3
-# import time
-#
-# from urllib.request import urlretrieve
-# import cv2
+import urllib.request
+
+# import urllib.request
 
 CREATE_TABLE_STATEMENT = """
 CREATE TABLE IF NOT EXISTS procurement (
@@ -152,53 +151,36 @@ def deleting_data_from_table_by_specific_product_identity(_id_list: list):
         cursor.close()
 
 
+def get_image_id_for_deleting_data():
+    image_id = []
+    for row in select_data_from_database("images"):
+        if str(row[1]).startswith("images") or str(row[2]).startswith("https://images.tokopedia.net/"):
+            image_id.append(row[0])
+
+    return image_id
+
+
+def deleting_data_from_table_by_specific_image_identity(_id_list: list):
+    with sqlite3.connect("databases/procurement.db") as procurement_db:
+        cursor = procurement_db.cursor()
+        for _id_ in _id_list:
+            cursor.execute('DELETE FROM images WHERE image_id = ?', (_id_,))
+        procurement_db.commit()
+        cursor.close()
+
+
 if __name__ == "__main__":
-    # create_tables()
     insert_data_from_folder("resources")
     deleting_data_from_table_by_specific_product_identity(get_product_identity_for_deleting_data())
-    # for row in select_data_from_database("procurement"):
-    #     print(row)
-
-    # print("Jumlah data yang diterima dari tabel pengadaan barang :", len(select_data_from_database("procurement")))
-
-    # for row in select_data_from_database("images"):
-    #     print(row)
-
-    # print("Jumlah data yang disimpan dari tabel gambar :", len(select_data_from_database("images")))
-
-    # print("Selisih data :", len(select_data_from_database("procurement")) - len(select_data_from_database("images")))
-
-    # print(select_data_from_database("images")[-1])
-
-    # images_content = []
+    images_content = []
     for data_index, data_row in enumerate(select_data_from_database("procurement")):
-        image_path = "images\\image_{}.png".format(str(data_index).zfill(3))
+        image_path = "images\\image_{}.png".format(str(data_row[0]).zfill(3))
         image_link = str(data_row[-1]).removesuffix("?ect=4g")
         product_identity = data_row[0]
-        print(image_path, image_link, product_identity)
+        images_content.append((image_link, image_path, product_identity))
 
-    #     urlretrieve(image_link, image_path)
-    #     images_content.append((image_link, image_path, product_identity))
-    #     urlretrieve(image_link, os.path.join(os.getcwd(), image_path))
-    # create_tables(CREATE_IMAGE_TABLE_STATEMENT)
-    # insert_data(INSERT_DATA_INTO_IMAGE_TABLE, images_content)
-    # import deduplicate_image
-    #
-    # images_set = set()
-    # images = [os.path.join(os.getcwd(), content[-2]) for content in select_data_from_database("images")]
-    # print(images)
+    insert_data(INSERT_DATA_INTO_IMAGE_TABLE, images_content)
+    deleting_data_from_table_by_specific_image_identity(get_image_id_for_deleting_data())
 
-    # for i in range(len(images)):
-    #     for j in range(1, len(images)):
-    #         for k in range(2, len(images) + 1):
-    #             if len(images[i:j:k]) == 2:
-    #                 image_path_1, image_path_2 = images[i:j:k]
-    #                 histogram_image_1 = deduplicate_image.get_histogram_image_data(image_path_1)
-    #                 histogram_image_2 = deduplicate_image.get_histogram_image_data(image_path_2)
-    #                 histogram_images = histogram_image_1, histogram_image_2
-    #                 score = deduplicate_image.get_similarity_score(histogram_images)
-    #                 if 0.05 <= score <= 1.0:
-    #                     print(score, image_path_2)
-    #                     images_set.add(image_path_2)
-    #
-    # print(len(images_set))
+    for row in select_data_from_database("images"):
+        urllib.request.urlretrieve(row[1], row[2])
