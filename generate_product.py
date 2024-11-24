@@ -78,4 +78,5 @@ class UpdateResources(ScrapeDataFromTokopedia):
                 self.retrieve_new_images(file)
 
 
-update_resources = UpdateResources(new_or_existed_query="mesin_bubut", start_index=0, end_index=13)
+for kw in ["brankas", "mesin_bubut"]:
+    UpdateResources(new_or_existed_query=kw, start_index=0, end_index=13)

@@ -14,8 +14,11 @@ class ScrapeDataFromTokopedia:
         self.soup = None
         self.current_elements = None
         self.current_element = None
-        self.temporary_elements = [
-            ["Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra"]]
+        self.temporary_elements = set()
+        # self.temporary_elements = [
+        #     ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra")]
+        self.temporary_elements.add(
+            ("Nama Produk", "Harga Produk", "Jumlah Barang Yang Terjual", "Tautan Produk", "Tautan Citra"))
         self.maximum_pages = 100
         self.page_start = page_start
         self.page_end = page_end
@@ -64,32 +67,32 @@ class ScrapeDataFromTokopedia:
                         sold_number = child_element.find("span", class_="se8WAnkjbVXZNA8mT+Veuw==")
                         # previous_price = child_element.find("span", class_=class_name_for_previous_price)
                         if normal_price is not None and current_price is None and sold_number is not None:
-                            normal_price = int(normal_price.text.replace("Rp", "").replace(".", ""))
+                            normal_price = normal_price.text.replace("Rp", "").replace(".", "")
                             if sold_number.text.find("+ terjual") > 0:
-                                sold_number = int(sold_number.text.replace("+ terjual", ""))
+                                sold_number = sold_number.text.replace("+ terjual", "")
                             else:
-                                sold_number = int(sold_number.text.replace(" terjual", ""))
-                            self.temporary_elements.append([product_name.text, normal_price, sold_number, product_link,
-                                                            product_image_link])
+                                sold_number = sold_number.text.replace(" terjual", "")
+                            self.temporary_elements.add((product_name.text, normal_price, sold_number, product_link,
+                                                         product_image_link))
                         elif current_price is not None and normal_price is None and sold_number is not None:
-                            current_price = int(current_price.text.replace("Rp", "").replace(".", ""))
+                            current_price = current_price.text.replace("Rp", "").replace(".", "")
                             if sold_number.text.find("+ terjual") > 0:
-                                sold_number = int(sold_number.text.replace("+ terjual", ""))
+                                sold_number = sold_number.text.replace("+ terjual", "")
                             else:
-                                sold_number = int(sold_number.text.replace(" terjual", ""))
-                            self.temporary_elements.append([product_name.text, current_price, sold_number, product_link,
-                                                            product_image_link])
+                                sold_number = sold_number.text.replace(" terjual", "")
+                            self.temporary_elements.add((product_name.text, current_price, sold_number, product_link,
+                                                        product_image_link))
         else:
             pass
 
-        self.temporary_elements = list(set(self.temporary_elements))
+        # self.temporary_elements = list(set(self.temporary_elements))
 
     def search(self):
         self.query = self.query.replace(" ", "+")
         for m in self.page_range:
             driver = WebDriver()
             try:
-                driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m+1, self.query))
+                driver.get("https://www.tokopedia.com/search?navsource=&page={}&q={}".format(m + 1, self.query))
             except NoSuchWindowException:
                 continue
             except ReadTimeoutError:
@@ -98,7 +101,7 @@ class ScrapeDataFromTokopedia:
             self.scripts = []
             try:
                 for k in range(150):
-                    driver.execute_script("window.scrollBy({}, {});".format(k, k+1))
+                    driver.execute_script("window.scrollBy({}, {});".format(k, k + 1))
                     time.sleep(0.05)
                     if k % 40 == 0:
                         self.scripts.append(driver.page_source)
@@ -127,5 +130,5 @@ class ScrapeDataFromTokopedia:
                     self.print_result()
                     continue
 
-            print("Halaman {}/{}".format(str(m+1).zfill(2), self.page_end))
+            print("Halaman {}/{}".format(str(m + 1).zfill(2), self.page_end))
             print("Data yang diterima secara kumulatif : {} data".format(len(self.temporary_elements[1:])))
