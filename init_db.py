@@ -171,8 +171,8 @@ if __name__ == "__main__":
     # print(select_data_from_database("images")[-1])
 
     # images_content = []
-    for data_row in select_data_from_database("procurement"):
-        image_path = "images\\image_{}.png".format(str(data_row[0]).zfill(3))
+    for data_index, data_row in enumerate(select_data_from_database("procurement")):
+        image_path = "images\\image_{}.png".format(str(data_index).zfill(3))
         image_link = str(data_row[-1]).removesuffix("?ect=4g")
         product_identity = data_row[0]
         print(image_path, image_link, product_identity)
