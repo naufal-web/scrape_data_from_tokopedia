@@ -79,7 +79,7 @@ class ScrapeDataFromTokopedia:
                             else:
                                 sold_number = sold_number.text.replace(" terjual", "")
                             self.temporary_elements.append((product_name.text, current_price, sold_number, product_link,
-                                                        product_image_link))
+                                                            product_image_link))
         else:
             pass
 
