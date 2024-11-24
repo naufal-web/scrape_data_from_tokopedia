@@ -152,15 +152,31 @@ def deleting_data_from_table_by_specific_product_identity(_id_list: list):
         cursor.close()
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
     # create_tables()
-    # insert_data_from_folder("resources")
-    # deleting_data_from_table_by_specific_product_identity(get_product_identity_for_deleting_data())
+    insert_data_from_folder("resources")
+    deleting_data_from_table_by_specific_product_identity(get_product_identity_for_deleting_data())
+    # for row in select_data_from_database("procurement"):
+    #     print(row)
+
+    # print("Jumlah data yang diterima dari tabel pengadaan barang :", len(select_data_from_database("procurement")))
+
+    # for row in select_data_from_database("images"):
+    #     print(row)
+
+    # print("Jumlah data yang disimpan dari tabel gambar :", len(select_data_from_database("images")))
+
+    # print("Selisih data :", len(select_data_from_database("procurement")) - len(select_data_from_database("images")))
+
+    # print(select_data_from_database("images")[-1])
+
     # images_content = []
-    # for data_row in select_data_from_database("procurement"):
-    #     image_path = "images\\image_{}.png".format(str(data_row[0]).zfill(3))
-    #     image_link = str(data_row[-1]).removesuffix("?ect=4g").removesuffix(".webp")
-    #     product_identity = data_row[0]
+    for data_row in select_data_from_database("procurement"):
+        image_path = "images\\image_{}.png".format(str(data_row[0]).zfill(3))
+        image_link = str(data_row[-1]).removesuffix("?ect=4g")
+        product_identity = data_row[0]
+        print(image_path, image_link, product_identity)
+
     #     urlretrieve(image_link, image_path)
     #     images_content.append((image_link, image_path, product_identity))
     #     urlretrieve(image_link, os.path.join(os.getcwd(), image_path))
