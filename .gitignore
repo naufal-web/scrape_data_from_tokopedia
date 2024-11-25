@@ -1,3 +1,6 @@
 functions/scrape_data_from_klikindomaret.py
 tests
 .idea
+images/*_*_*.png
+images/*_*.png
+!images/image_*.png
